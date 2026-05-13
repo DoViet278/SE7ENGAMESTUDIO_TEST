@@ -17,10 +17,10 @@ public class SoccerBall : MonoBehaviour
     {
         if (isFlying || isScored) return;
 
-        StartCoroutine(KickRoutine(goal, force));
+        KickRoutine(goal, force);
     }
 
-    IEnumerator KickRoutine(Transform goal, float force)
+    void KickRoutine(Transform goal, float force)
     {
         isFlying = true;
 
@@ -34,10 +34,6 @@ public class SoccerBall : MonoBehaviour
 
         CameraManager.Instance.FollowBall(transform);
 
-        yield return new WaitForSeconds(2f);
-
-        CameraManager.Instance.FollowPlayer();
-
         isFlying = false;
 
     }
@@ -50,6 +46,15 @@ public class SoccerBall : MonoBehaviour
             isScored = true;
 
             GoalManager.Instance.PlayConfetti(other.transform);
+
+            StartCoroutine(ReturnCameraToPlayerAfterDelay());
         }
+    }
+
+    IEnumerator ReturnCameraToPlayerAfterDelay()
+    {
+        yield return new WaitForSeconds(2f);
+
+        CameraManager.Instance.FollowPlayer();
     }
 }
